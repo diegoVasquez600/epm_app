@@ -35,43 +35,42 @@ void tapBottomTabByLabel(WidgetTester tester, String label) {
 void main() {
   testWidgets('Dashboard principal renderiza correctamente', (tester) async {
     await tester.pumpWidget(const EpmPrototypeApp());
-    await waitForFinder(tester, find.text('Hola, Ana!'));
+    await waitForFinder(tester, find.text('¡Hola, Ana! 👋'));
 
-    expect(find.text('Hola, Ana!'), findsOneWidget);
-    expect(find.text('Consumo actual\nMayo 2026'), findsOneWidget);
+    expect(find.text('¡Hola, Ana! 👋'), findsOneWidget);
+    expect(find.text('Asi va tu consumo hoy.'), findsOneWidget);
     expect(find.text('Pagar ahora'), findsOneWidget);
   });
 
-  testWidgets('Historial permite ver 2025 y 2026', (tester) async {
+  testWidgets('Historial muestra el layout de referencia', (tester) async {
     await tester.pumpWidget(
       MaterialApp(home: EpmMainShell(data: AppData.prototypeFallback())),
     );
 
-    tapBottomTabByLabel(tester, 'Consumos');
+    tapBottomTabByLabel(tester, 'Historial');
     await tester.pump(const Duration(milliseconds: 300));
 
     expect(find.text('Historial de consumo'), findsOneWidget);
-    expect(find.text('2025'), findsOneWidget);
-    expect(find.text('2026'), findsOneWidget);
+    expect(find.text('Diario'), findsOneWidget);
+    expect(find.text('Mensual'), findsOneWidget);
+    expect(find.text('Anual'), findsOneWidget);
+
+    await tapVisibleText(tester, 'Anual');
+    await tester.pump(const Duration(milliseconds: 300));
+
+    expect(find.text('2024'), findsOneWidget);
   });
 
-  testWidgets('Servicios abre modulo de alertas', (tester) async {
+  testWidgets('Alertas muestra el modulo', (tester) async {
     await tester.pumpWidget(
       MaterialApp(home: EpmMainShell(data: AppData.prototypeFallback())),
     );
 
-    tapBottomTabByLabel(tester, 'Servicios');
+    tapBottomTabByLabel(tester, 'Alertas');
     await tester.pump(const Duration(milliseconds: 300));
 
-    expect(find.text('Todo lo que necesitas para gestionar\ntus servicios de forma facil y inteligente'), findsOneWidget);
-    final alertFinder = find.text('Alertas de consumo', skipOffstage: false).first;
-    final alertTapTarget = find.ancestor(of: alertFinder, matching: find.byType(InkWell)).first;
-    final alertInkWell = tester.widget<InkWell>(alertTapTarget);
-    alertInkWell.onTap?.call();
-    await tester.pumpAndSettle();
-
-    expect(find.text('Modulo EPM'), findsOneWidget);
     expect(find.text('Alertas de consumo'), findsOneWidget);
+    expect(find.text('Lampara encendida'), findsOneWidget);
   });
 
   testWidgets('Pago simulado muestra confirmacion', (tester) async {
@@ -79,10 +78,10 @@ void main() {
       MaterialApp(home: EpmMainShell(data: AppData.prototypeFallback())),
     );
 
-    final payButton = tester.widget<FilledButton>(
-      find.widgetWithText(FilledButton, 'Pagar ahora').first,
-    );
-    payButton.onPressed?.call();
+    final payButton = find.widgetWithText(FilledButton, 'Pagar ahora');
+    await waitForFinder(tester, payButton);
+    final button = tester.widget<FilledButton>(payButton.first);
+    button.onPressed?.call();
     await tester.pump();
     expect(find.text('Procesando pago...'), findsOneWidget);
 

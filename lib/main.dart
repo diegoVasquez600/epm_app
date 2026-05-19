@@ -181,20 +181,14 @@ class _EpmMainShellState extends State<EpmMainShell> {
         isPaying: _isPaying,
       ),
       HistoryPage(data: widget.data),
-      ServicesHubPage(data: widget.data),
-      TipsPage(data: widget.data),
-      NotificationsPage(data: widget.data),
+      AlertsPage(data: widget.data),
+      SavingsPage(data: widget.data),
+      MorePage(data: widget.data),
     ];
 
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFFE7F5EA), Color(0xFFF8FBF8)],
-          ),
-        ),
+        color: const Color(0xFFF7F8F7),
         child: SafeArea(
           child: Center(
             child: LayoutBuilder(
@@ -204,7 +198,7 @@ class _EpmMainShellState extends State<EpmMainShell> {
                 return ConstrainedBox(
                   constraints: BoxConstraints(maxWidth: maxWidth),
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(14, 14, 14, 12),
+                    padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
                     child: Column(
                       children: [
                         Expanded(child: pages[_currentTab]),
@@ -246,42 +240,47 @@ class HomeDashboardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dashboard = data.dashboard;
+    final alerts = data.alerts.take(2).toList();
 
     return ListView(
       children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Hola, ${data.user.name}!',
-                    style: const TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.w900,
-                      color: Color(0xFF162117),
-                    ),
-                  ),
-                  Text(
-                    data.user.greeting,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF38433A),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const Icon(Icons.notifications_none_rounded, size: 28),
-          ],
+        _HeaderBar(notificationsCount: 3),
+        const SizedBox(height: 18),
+        Text(
+          '¡Hola, ${data.user.name}! 👋',
+          style: const TextStyle(
+            fontSize: 29,
+            fontWeight: FontWeight.w900,
+            color: Color(0xFF162117),
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          'Asi va tu consumo hoy.',
+          style: const TextStyle(
+            fontSize: 17,
+            fontWeight: FontWeight.w700,
+            color: Color(0xFF3C463D),
+          ),
         ),
         const SizedBox(height: 14),
         Container(
-          padding: const EdgeInsets.all(12),
-          decoration: cardDecoration(),
+          padding: const EdgeInsets.all(18),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(22),
+            gradient: const LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [Color(0xFF0F7D2C), Color(0xFF17A43A)],
+            ),
+            boxShadow: const [
+              BoxShadow(
+                color: Color(0x26177E38),
+                blurRadius: 18,
+                offset: Offset(0, 8),
+              ),
+            ],
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -289,38 +288,84 @@ class HomeDashboardPage extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      'Consumo actual\n${dashboard.period}',
+                      'Consumo de hoy',
                       style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w800,
-                        height: 1.15,
+                        fontSize: 18,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ),
-                  Chip(
-                    label: Text(dashboard.consumptionStatus),
-                    backgroundColor: const Color(0xFFDEF2E2),
-                    labelStyle: const TextStyle(
-                      color: Color(0xFF1B8A3B),
-                      fontWeight: FontWeight.w700,
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFCCF2D0),
+                      borderRadius: BorderRadius.circular(18),
                     ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      side: BorderSide.none,
+                    child: const Text(
+                      'Dentro de meta',
+                      style: TextStyle(
+                        color: Color(0xFF13873A),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 6),
               Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  for (var i = 0; i < dashboard.consumption.length; i++)
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.only(right: i == 2 ? 0 : 8),
-                        child: ConsumptionTile(item: dashboard.consumption[i]),
+                  Text(
+                    '12.4',
+                    style: const TextStyle(
+                      fontSize: 42,
+                      height: 1,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                  const SizedBox(width: 6),
+                  const Padding(
+                    padding: EdgeInsets.only(bottom: 5),
+                    child: Text(
+                      'kWh',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 6),
+              const Row(
+                children: [
+                  Icon(Icons.arrow_drop_up, color: Color(0xFFC8F44A), size: 24),
+                  Text(
+                    '8% mas que ayer',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: SizedBox(
+                      height: 92,
+                      child: DailyConsumptionSparkline(
+                        points: dashboard.dailyConsumption,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ],
@@ -328,22 +373,22 @@ class HomeDashboardPage extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         Container(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.all(14),
           decoration: cardDecoration(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 dashboard.billing.title,
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
+                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Color(0xFF2F3830)),
               ),
-              const SizedBox(height: 6),
+              const SizedBox(height: 4),
               Row(
                 children: [
                   Expanded(
                     child: Text(
                       dashboard.billing.amount,
-                      style: const TextStyle(fontSize: 38, fontWeight: FontWeight.w900),
+                      style: const TextStyle(fontSize: 34, fontWeight: FontWeight.w900, color: Color(0xFF121712)),
                     ),
                   ),
                   FilledButton(
@@ -351,6 +396,7 @@ class HomeDashboardPage extends StatelessWidget {
                     style: FilledButton.styleFrom(
                       backgroundColor: const Color(0xFF13873A),
                       foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     ),
                     child: Text(isPaying ? 'Pagando...' : dashboard.billing.cta),
                   ),
@@ -358,14 +404,14 @@ class HomeDashboardPage extends StatelessWidget {
               ),
               Text(
                 dashboard.billing.dueDate,
-                style: const TextStyle(fontWeight: FontWeight.w600),
+                style: const TextStyle(fontWeight: FontWeight.w600, color: Color(0xFF374138)),
               ),
             ],
           ),
         ),
         const SizedBox(height: 12),
         Container(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.all(14),
           decoration: cardDecoration(),
           child: Row(
             children: [
@@ -375,12 +421,12 @@ class HomeDashboardPage extends StatelessWidget {
                   children: [
                     Text(
                       dashboard.savings.title,
-                      style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 21),
+                      style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
                     ),
                     const SizedBox(height: 5),
                     Text(
                       dashboard.savings.message,
-                      style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 20),
+                      style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
                     ),
                     Text(
                       dashboard.savings.subMessage,
@@ -413,6 +459,156 @@ class HomeDashboardPage extends StatelessWidget {
             ],
           ),
         ),
+        const SizedBox(height: 12),
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: cardDecoration(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Tu meta del mes',
+                style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16),
+              ),
+              const SizedBox(height: 10),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFEAF7EE),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 46,
+                      height: 46,
+                      decoration: const BoxDecoration(
+                        color: Color(0xFF13873A),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(Icons.savings_rounded, color: Colors.white),
+                    ),
+                    const SizedBox(width: 10),
+                    const Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Compra de lavadora eficiente',
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: Color(0xFF1B7F35)),
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            r'Has ahorrado $85.000 de $100.000',
+                            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFF465247)),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(color: const Color(0xFFD2E2D6)),
+                      ),
+                      child: const Column(
+                        children: [
+                          Text(
+                            r'$15.000',
+                            style: TextStyle(fontWeight: FontWeight.w800, color: Color(0xFF1B7F35), fontSize: 16),
+                          ),
+                          Text(
+                            'te faltan',
+                            style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 16),
+        Row(
+          children: [
+            const Expanded(
+              child: Text(
+                'Alertas activas',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+              ),
+            ),
+            TextButton(
+              onPressed: () {},
+              child: const Text('Ver todas'),
+            ),
+          ],
+        ),
+        for (final alert in alerts)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: Container(
+              padding: const EdgeInsets.all(14),
+              decoration: cardDecoration(),
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    radius: 24,
+                    backgroundColor: alert.service == 'energia'
+                        ? const Color(0xFFFFC21A)
+                        : const Color(0xFF5CA1E6),
+                    child: Icon(
+                      alert.service == 'energia'
+                          ? Icons.lightbulb_rounded
+                          : Icons.local_laundry_service_rounded,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(alert.title, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
+                        const SizedBox(height: 4),
+                        Text(alert.detail, style: const TextStyle(fontWeight: FontWeight.w600, color: Color(0xFF4A554B))),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  const Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        'Ahora',
+                        style: TextStyle(fontWeight: FontWeight.w600, color: Color(0xFF6E776F)),
+                      ),
+                      SizedBox(height: 6),
+                      Icon(Icons.chevron_right_rounded, color: Color(0xFF283029)),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        const SizedBox(height: 10),
+        Container(
+          padding: const EdgeInsets.all(14),
+          decoration: cardDecoration(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Resumen del dia',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+              ),
+              const SizedBox(height: 12),
+              DailySummaryChart(points: dashboard.dailyConsumption),
+            ],
+          ),
+        ),
       ],
     );
   }
@@ -428,176 +624,931 @@ class HistoryPage extends StatefulWidget {
 }
 
 class _HistoryPageState extends State<HistoryPage> {
-  String _service = 'energia';
-  int _year = 2026;
+  String _period = 'diario';
+  int _year = 2024;
+
+  final List<double> _dailyValues = <double>[
+    0.22,
+    0.12,
+    0.30,
+    0.20,
+    0.28,
+    0.52,
+    0.86,
+    0.42,
+    1.28,
+    0.84,
+    0.52,
+    0.74,
+    1.02,
+    1.42,
+    0.76,
+    0.86,
+    0.74,
+    0.66,
+    1.04,
+    0.88,
+    0.76,
+    0.24,
+    0.30,
+    0.56,
+  ];
+
+  static const List<String> _months = <String>['E', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
+  static const List<double> _annualBars = <double>[520, 360, 450, 542, 520, 560, 590, 600, 535, 470, 460, 570];
+  static const List<double> _annualPrev = <double>[500, 460, 480, 470, 495, 460, 450, 520, 650, 490, 430, 470];
+  static const List<double> _annualCurrent = <double>[410, 320, 500, 460, 510, 450, 570, 612, 520, 430, 410, 540];
+
+  String get _periodLabel {
+    switch (_period) {
+      case 'diario':
+        return '28 de mayo de 2024';
+      case 'mensual':
+        return 'mayo de 2024';
+      default:
+        return '$_year';
+    }
+  }
+
+  void _goPrevious() {
+    setState(() {
+      if (_period == 'anual') {
+        _year -= 1;
+      }
+    });
+  }
+
+  void _goNext() {
+    setState(() {
+      if (_period == 'anual') {
+        _year += 1;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final history = widget.data.historyByYear[_year] ?? const <MonthlyConsumption>[];
-    final maxValue = history
-        .map((m) => m.valueFor(_service))
-        .fold<int>(1, (prev, e) => e > prev ? e : prev)
-        .toDouble();
-
     return ListView(
       children: [
-        const Text(
-          'Historial de consumo',
-          style: TextStyle(fontSize: 30, fontWeight: FontWeight.w900),
-        ),
-        const SizedBox(height: 10),
-        Wrap(
-          spacing: 8,
+        Row(
           children: [
-            for (final service in ['energia', 'agua', 'gas'])
-              ChoiceChip(
-                label: Text(capitalize(service)),
-                selected: _service == service,
-                onSelected: (_) {
-                  setState(() {
-                    _service = service;
-                  });
-                },
-                selectedColor: const Color(0xFFE1F4E5),
-                labelStyle: TextStyle(
-                  color: _service == service ? const Color(0xFF13873A) : const Color(0xFF4D574E),
-                  fontWeight: FontWeight.w700,
-                ),
+            IconButton(
+              onPressed: () {},
+              visualDensity: VisualDensity.compact,
+              icon: const Icon(Icons.chevron_left_rounded, size: 26, color: Color(0xFF1F2721)),
+            ),
+            const Expanded(
+              child: Text(
+                'Historial de consumo',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 33, fontWeight: FontWeight.w900, color: Color(0xFF121914)),
               ),
+            ),
+            const SizedBox(width: 44),
           ],
         ),
         const SizedBox(height: 8),
-        Wrap(
-          spacing: 8,
+        Row(
           children: [
-            for (final year in widget.data.historyByYear.keys.toList()..sort())
-              ChoiceChip(
-                label: Text('$year'),
-                selected: _year == year,
-                onSelected: (_) {
-                  setState(() {
-                    _year = year;
-                  });
-                },
-                selectedColor: const Color(0xFFE1F4E5),
-                labelStyle: TextStyle(
-                  color: _year == year ? const Color(0xFF13873A) : const Color(0xFF4D574E),
-                  fontWeight: FontWeight.w700,
+            for (final item in const [
+              ('diario', 'Diario'),
+              ('mensual', 'Mensual'),
+              ('anual', 'Anual'),
+            ])
+              Expanded(
+                child: InkWell(
+                  onTap: () {
+                    setState(() {
+                      _period = item.$1;
+                    });
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: _period == item.$1 ? const Color(0xFF1FA34A) : const Color(0xFFDDE4DE),
+                          width: _period == item.$1 ? 2 : 1,
+                        ),
+                      ),
+                    ),
+                    child: Text(
+                      item.$2,
+                      style: TextStyle(
+                        fontSize: 23,
+                        fontWeight: FontWeight.w800,
+                        color: _period == item.$1 ? const Color(0xFF1A973F) : const Color(0xFF586257),
+                      ),
+                    ),
+                  ),
                 ),
               ),
           ],
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 14),
         Container(
-          padding: const EdgeInsets.all(12),
-          decoration: cardDecoration(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 2),
+          decoration: const BoxDecoration(
+            border: Border(
+              bottom: BorderSide(color: Color(0xFFE7EBE8)),
+            ),
+          ),
+          child: Row(
             children: [
-              const Text(
-                'kWh',
-                style: TextStyle(fontWeight: FontWeight.w700, color: Color(0xFF6A746B)),
+              IconButton(
+                onPressed: _goPrevious,
+                visualDensity: VisualDensity.compact,
+                icon: const Icon(Icons.chevron_left_rounded, color: Color(0xFF1F2621)),
               ),
-              const SizedBox(height: 8),
-              SizedBox(
-                height: 180,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    for (final item in history)
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 3),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Expanded(
-                                child: Align(
-                                  alignment: Alignment.bottomCenter,
-                                  child: FractionallySizedBox(
-                                    heightFactor: item.valueFor(_service) / maxValue,
-                                    child: Container(
-                                      width: double.infinity,
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xFF62B96D),
-                                        borderRadius: BorderRadius.circular(7),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 6),
-                              Text(
-                                item.month,
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w700,
-                                  color: Color(0xFF5B655C),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                  ],
+              const Icon(Icons.calendar_today_outlined, size: 19, color: Color(0xFF2D3730)),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  _periodLabel,
+                  style: const TextStyle(fontSize: 31, fontWeight: FontWeight.w800, color: Color(0xFF1A231D)),
                 ),
+              ),
+              IconButton(
+                onPressed: _goNext,
+                visualDensity: VisualDensity.compact,
+                icon: const Icon(Icons.chevron_right_rounded, color: Color(0xFF1F2621)),
               ),
             ],
           ),
         ),
-        const SizedBox(height: 10),
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: cardDecoration(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Detalle mensual $_year',
-                style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
-              ),
-              const SizedBox(height: 8),
-              for (final item in history.reversed.take(6))
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 6),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          item.periodLabel,
-                          style: const TextStyle(fontWeight: FontWeight.w600),
+        const SizedBox(height: 14),
+        if (_period == 'diario') ..._buildDailyView() else ..._buildAnnualView(monthly: _period == 'mensual'),
+      ],
+    );
+  }
+
+  List<Widget> _buildDailyView() {
+    return [
+      _consumptionHeaderCard(
+        title: 'Consumo total del dia',
+        value: '11.6',
+        unit: 'kWh',
+        delta: '8%',
+        vsLabel: 'vs. ayer',
+      ),
+      const SizedBox(height: 12),
+      _DailyChart(values: _dailyValues, highlightIndex: 13, maxY: 2.5, tooltip: '1.2 kWh'),
+      const SizedBox(height: 12),
+      Container(
+        padding: const EdgeInsets.all(16),
+        decoration: cardDecoration(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Row(
+              children: [
+                Icon(Icons.schedule_rounded, size: 18, color: Color(0xFF4E5A52)),
+                SizedBox(width: 8),
+                Text(
+                  'Consumo por franja horaria',
+                  style: TextStyle(fontSize: 19, fontWeight: FontWeight.w800, color: Color(0xFF1A231C)),
+                ),
+              ],
+            ),
+            const SizedBox(height: 14),
+            for (final row in const [
+              ('00:00 - 06:00', 1.8, 16),
+              ('06:00 - 12:00', 3.2, 28),
+              ('12:00 - 18:00', 4.0, 34),
+              ('18:00 - 24:00', 2.6, 22),
+            ])
+              Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            row.$1,
+                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Color(0xFF5A645C)),
+                          ),
+                        ),
+                        Text(
+                          '${row.$2.toStringAsFixed(1)} kWh',
+                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: Color(0xFF232E26)),
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          '${row.$3}%',
+                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: Color(0xFF556156)),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(6),
+                      child: LinearProgressIndicator(
+                        value: row.$3 / 100,
+                        minHeight: 9,
+                        backgroundColor: const Color(0xFFE9EEEA),
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          row.$3 >= 30 ? const Color(0xFF08933A) : const Color(0xFF17A13F),
                         ),
                       ),
-                      Text(
-                        '${item.valueFor(_service)} ${unitForService(_service)}',
-                        style: const TextStyle(fontWeight: FontWeight.w900),
+                    ),
+                  ],
+                ),
+              ),
+          ],
+        ),
+      ),
+      const SizedBox(height: 12),
+      Container(
+        padding: const EdgeInsets.all(16),
+        decoration: cardDecoration(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Dispositivos que mas consumieron hoy',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: Color(0xFF18221C)),
+            ),
+            const SizedBox(height: 12),
+            for (final item in const [
+              ('Lavadora', '2.4 kWh', '21%', Icons.local_laundry_service_rounded, Color(0xFF2591F1)),
+              ('Aire acondicionado', '2.1 kWh', '18%', Icons.ac_unit_rounded, Color(0xFFFF8C3A)),
+              ('Nevera', '1.6 kWh', '14%', Icons.kitchen_rounded, Color(0xFF159B4B)),
+              ('Iluminacion', '1.2 kWh', '10%', Icons.lightbulb_rounded, Color(0xFFFFB321)),
+              ('Otros', '4.3 kWh', '37%', Icons.more_horiz_rounded, Color(0xFFC7CDD1)),
+            ])
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 34,
+                      height: 34,
+                      decoration: BoxDecoration(color: (item.$5 as Color).withValues(alpha: 0.14), shape: BoxShape.circle),
+                      child: Icon(item.$4 as IconData, size: 19, color: item.$5 as Color),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        item.$1 as String,
+                        style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700, color: Color(0xFF1A231C)),
+                      ),
+                    ),
+                    Text(
+                      item.$2 as String,
+                      style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w800, color: Color(0xFF1A231C)),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      item.$3 as String,
+                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Color(0xFF68726A)),
+                    ),
+                    const Icon(Icons.chevron_right_rounded, color: Color(0xFF8B9590)),
+                  ],
+                ),
+              ),
+          ],
+        ),
+      ),
+      const SizedBox(height: 12),
+      OutlinedButton.icon(
+        onPressed: () {},
+        style: OutlinedButton.styleFrom(
+          foregroundColor: const Color(0xFF188A3D),
+          side: const BorderSide(color: Color(0xFF199447), width: 1.5),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
+          alignment: Alignment.centerLeft,
+        ),
+        icon: const Icon(Icons.event_note_rounded, size: 20),
+        label: const Row(
+          children: [
+            Expanded(
+              child: Text(
+                'Ver recomendaciones para hoy',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+              ),
+            ),
+            Icon(Icons.chevron_right_rounded),
+          ],
+        ),
+      ),
+    ];
+  }
+
+  List<Widget> _buildAnnualView({required bool monthly}) {
+    final title = monthly ? 'Consumo total del mes' : 'Consumo total del año';
+    final value = monthly ? '355' : '4,256';
+    final delta = monthly ? '5%' : '6%';
+    final vs = monthly ? 'vs. abril' : 'vs. ${_year - 1}';
+
+    return [
+      _consumptionHeaderCard(
+        title: title,
+        value: value,
+        unit: 'kWh',
+        delta: delta,
+        vsLabel: vs,
+      ),
+      const SizedBox(height: 12),
+      _AnnualBarsChart(
+        maxY: 800,
+        months: _months,
+        values: _annualBars,
+        highlightIndex: 3,
+        tooltip: '542 kWh',
+      ),
+      const SizedBox(height: 12),
+      Container(
+        padding: const EdgeInsets.all(16),
+        decoration: cardDecoration(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Row(
+              children: [
+                Icon(Icons.pie_chart_outline_rounded, size: 18, color: Color(0xFF4E5A52)),
+                SizedBox(width: 8),
+                Text(
+                  'Resumen anual',
+                  style: TextStyle(fontSize: 19, fontWeight: FontWeight.w800, color: Color(0xFF1A231C)),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            GridView.count(
+              shrinkWrap: true,
+              crossAxisCount: 2,
+              mainAxisSpacing: 8,
+              crossAxisSpacing: 8,
+              childAspectRatio: 1.28,
+              physics: const NeverScrollableScrollPhysics(),
+              children: const [
+                _AnnualStatTile(title: 'Promedio mensual', value: '355 kWh'),
+                _AnnualStatTile(title: 'Mes de mayor consumo', value: 'Agosto\n612 kWh'),
+                _AnnualStatTile(title: 'Mes de menor consumo', value: 'Febrero\n274 kWh'),
+                _AnnualStatTile(title: 'Dia de mayor consumo', value: '15 de agosto\n24.3 kWh'),
+              ],
+            ),
+          ],
+        ),
+      ),
+      const SizedBox(height: 12),
+      Container(
+        padding: const EdgeInsets.all(16),
+        decoration: cardDecoration(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Comparación anual',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: Color(0xFF18221C)),
+            ),
+            const SizedBox(height: 10),
+            const Row(
+              children: [
+                _LegendDot(color: Color(0xFFC8CDD0), label: '2023'),
+                SizedBox(width: 16),
+                _LegendDot(color: Color(0xFF14913D), label: '2024'),
+              ],
+            ),
+            const SizedBox(height: 8),
+            _AnnualGroupedChart(
+              maxY: 800,
+              months: _months,
+              previous: _annualPrev,
+              current: _annualCurrent,
+              highlightIndex: 7,
+            ),
+          ],
+        ),
+      ),
+      const SizedBox(height: 12),
+      OutlinedButton.icon(
+        onPressed: () {},
+        style: OutlinedButton.styleFrom(
+          foregroundColor: const Color(0xFF188A3D),
+          side: const BorderSide(color: Color(0xFF199447), width: 1.5),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
+          alignment: Alignment.centerLeft,
+        ),
+        icon: const Icon(Icons.route_rounded, size: 20),
+        label: const Row(
+          children: [
+            Expanded(
+              child: Text(
+                'Ver recomendaciones para ahorrar',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+              ),
+            ),
+            Icon(Icons.chevron_right_rounded),
+          ],
+        ),
+      ),
+      const SizedBox(height: 12),
+      Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        decoration: BoxDecoration(
+          color: const Color(0xFFEAF6EB),
+          borderRadius: BorderRadius.circular(14),
+        ),
+        child: const Row(
+          children: [
+            Icon(Icons.eco_rounded, color: Color(0xFF79BB5B)),
+            SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                'Tip anual: Mantener habitos de ahorro puede\nhacer una gran diferencia en tu consumo y en el planeta.',
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: Color(0xFF4B5F4D)),
+              ),
+            ),
+          ],
+        ),
+      ),
+    ];
+  }
+
+  Widget _consumptionHeaderCard({
+    required String title,
+    required String value,
+    required String unit,
+    required String delta,
+    required String vsLabel,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+      decoration: BoxDecoration(
+        color: const Color(0xFFEFF5F0),
+        borderRadius: BorderRadius.circular(18),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 42,
+            height: 42,
+            decoration: const BoxDecoration(color: Color(0xFFD9F2DD), shape: BoxShape.circle),
+            child: const Icon(Icons.bolt_rounded, color: Color(0xFF10A33F)),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Color(0xFF445147)),
+                ),
+                const SizedBox(height: 2),
+                Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: value,
+                        style: const TextStyle(fontSize: 41, fontWeight: FontWeight.w900, color: Color(0xFF0F1A13)),
+                      ),
+                      TextSpan(
+                        text: ' $unit',
+                        style: const TextStyle(fontSize: 30, fontWeight: FontWeight.w700, color: Color(0xFF0F1A13)),
                       ),
                     ],
                   ),
                 ),
+              ],
+            ),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                decoration: BoxDecoration(color: const Color(0xFFDDF4E1), borderRadius: BorderRadius.circular(20)),
+                child: Text(
+                  '▲ $delta',
+                  style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w900, color: Color(0xFF1E9D43)),
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                vsLabel,
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: Color(0xFF2A332D)),
+              ),
             ],
           ),
-        ),
-        const SizedBox(height: 10),
-        FilledButton.tonal(
-          onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute<void>(
-                builder: (_) => ComparisonPage(data: widget.data),
-              ),
-            );
-          },
-          style: FilledButton.styleFrom(
-            backgroundColor: const Color(0xFFE7F3EA),
-            foregroundColor: const Color(0xFF1B8A3B),
-            padding: const EdgeInsets.symmetric(vertical: 14),
+        ],
+      ),
+    );
+  }
+}
+
+class _DailyChart extends StatelessWidget {
+  const _DailyChart({
+    required this.values,
+    required this.highlightIndex,
+    required this.maxY,
+    required this.tooltip,
+  });
+
+  final List<double> values;
+  final int highlightIndex;
+  final double maxY;
+  final String tooltip;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 2),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('kWh', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: Color(0xFF6D756E))),
+          const SizedBox(height: 8),
+          SizedBox(
+            height: 240,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                SizedBox(
+                  width: 30,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: const [
+                      Text('2.5', style: TextStyle(fontSize: 13, color: Color(0xFF7A827B))),
+                      Text('2.0', style: TextStyle(fontSize: 13, color: Color(0xFF7A827B))),
+                      Text('1.5', style: TextStyle(fontSize: 13, color: Color(0xFF7A827B))),
+                      Text('1.0', style: TextStyle(fontSize: 13, color: Color(0xFF7A827B))),
+                      Text('0.5', style: TextStyle(fontSize: 13, color: Color(0xFF7A827B))),
+                      Text('0', style: TextStyle(fontSize: 13, color: Color(0xFF7A827B))),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: Stack(
+                          children: [
+                            for (var i = 1; i <= 5; i++)
+                              Align(
+                                alignment: Alignment(0, 1 - (i / 5) * 2),
+                                child: Container(height: 1, color: const Color(0xFFE8ECE9)),
+                              ),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                for (var i = 0; i < values.length; i++)
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 2),
+                                      child: Align(
+                                        alignment: Alignment.bottomCenter,
+                                        child: FractionallySizedBox(
+                                          heightFactor: values[i] / maxY,
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: i == highlightIndex ? const Color(0xFF14963D) : const Color(0xFF64C951),
+                                              borderRadius: BorderRadius.circular(6),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                            Align(
+                              alignment: Alignment(-0.02, -0.05),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF0E1435),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Text(
+                                  tooltip,
+                                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: Colors.white),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      const Row(
+                        children: [
+                          Expanded(child: Center(child: Text('00', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: Color(0xFF646E67))))),
+                          Expanded(child: Center(child: Text('04', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: Color(0xFF646E67))))),
+                          Expanded(child: Center(child: Text('08', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: Color(0xFF646E67))))),
+                          Expanded(child: Center(child: Text('12', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: Color(0xFF646E67))))),
+                          Expanded(child: Center(child: Text('16', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: Color(0xFF646E67))))),
+                          Expanded(child: Center(child: Text('20', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: Color(0xFF646E67))))),
+                          Expanded(child: Center(child: Text('24', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: Color(0xFF646E67))))),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
-          child: const Text(
-            'Comparar con otro periodo',
-            style: TextStyle(fontWeight: FontWeight.w800),
+        ],
+      ),
+    );
+  }
+}
+
+class _AnnualBarsChart extends StatelessWidget {
+  const _AnnualBarsChart({
+    required this.maxY,
+    required this.months,
+    required this.values,
+    required this.highlightIndex,
+    required this.tooltip,
+  });
+
+  final double maxY;
+  final List<String> months;
+  final List<double> values;
+  final int highlightIndex;
+  final String tooltip;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 2),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('kWh', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: Color(0xFF6D756E))),
+          const SizedBox(height: 8),
+          SizedBox(
+            height: 230,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                SizedBox(
+                  width: 34,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: const [
+                      Text('800', style: TextStyle(fontSize: 13, color: Color(0xFF7A827B))),
+                      Text('600', style: TextStyle(fontSize: 13, color: Color(0xFF7A827B))),
+                      Text('400', style: TextStyle(fontSize: 13, color: Color(0xFF7A827B))),
+                      Text('200', style: TextStyle(fontSize: 13, color: Color(0xFF7A827B))),
+                      Text('0', style: TextStyle(fontSize: 13, color: Color(0xFF7A827B))),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Stack(
+                    children: [
+                      for (var i = 1; i <= 4; i++)
+                        Align(
+                          alignment: Alignment(0, 1 - (i / 4) * 2),
+                          child: Container(height: 1, color: const Color(0xFFE8ECE9)),
+                        ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          for (var i = 0; i < values.length; i++)
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 4),
+                                child: Container(
+                                  height: 170 * (values[i] / maxY),
+                                  decoration: BoxDecoration(
+                                    color: i == highlightIndex ? const Color(0xFF14963D) : const Color(0xFF66C953),
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                      Align(
+                        alignment: Alignment(-0.39, -0.98),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                          decoration: BoxDecoration(color: const Color(0xFF0E1435), borderRadius: BorderRadius.circular(12)),
+                          child: Text(
+                            tooltip,
+                            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              for (final month in months)
+                Expanded(
+                  child: Center(
+                    child: Text(
+                      month,
+                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Color(0xFF606B63)),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _AnnualGroupedChart extends StatelessWidget {
+  const _AnnualGroupedChart({
+    required this.maxY,
+    required this.months,
+    required this.previous,
+    required this.current,
+    required this.highlightIndex,
+  });
+
+  final double maxY;
+  final List<String> months;
+  final List<double> previous;
+  final List<double> current;
+  final int highlightIndex;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 250,
+      child: Column(
+        children: [
+          Expanded(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                SizedBox(
+                  width: 32,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: const [
+                      Text('800', style: TextStyle(fontSize: 13, color: Color(0xFF7A827B))),
+                      Text('600', style: TextStyle(fontSize: 13, color: Color(0xFF7A827B))),
+                      Text('400', style: TextStyle(fontSize: 13, color: Color(0xFF7A827B))),
+                      Text('200', style: TextStyle(fontSize: 13, color: Color(0xFF7A827B))),
+                      Text('0', style: TextStyle(fontSize: 13, color: Color(0xFF7A827B))),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Stack(
+                    children: [
+                      for (var i = 1; i <= 4; i++)
+                        Align(
+                          alignment: Alignment(0, 1 - (i / 4) * 2),
+                          child: Container(height: 1, color: const Color(0xFFE8ECE9)),
+                        ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          for (var i = 0; i < months.length; i++)
+                            Expanded(
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 1),
+                                      child: Container(
+                                        height: 150 * (previous[i] / maxY),
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFFC8CDD0),
+                                          borderRadius: BorderRadius.circular(3),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 1),
+                                      child: Container(
+                                        height: 150 * (current[i] / maxY),
+                                        decoration: BoxDecoration(
+                                          color: i == highlightIndex ? const Color(0xFF0F8D36) : const Color(0xFF69C75A),
+                                          borderRadius: BorderRadius.circular(3),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                        ],
+                      ),
+                      Align(
+                        alignment: Alignment(0.27, -0.96),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(color: const Color(0xFFE0E5E2)),
+                          ),
+                          child: const Text.rich(
+                            TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: '2023: 650 kWh\n',
+                                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: Color(0xFF8A9190)),
+                                ),
+                                TextSpan(
+                                  text: '2024: 612 kWh',
+                                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w900, color: Color(0xFF1F9641)),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              for (final month in months)
+                Expanded(
+                  child: Center(
+                    child: Text(
+                      month,
+                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Color(0xFF606B63)),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _LegendDot extends StatelessWidget {
+  const _LegendDot({required this.color, required this.label});
+
+  final Color color;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Container(width: 12, height: 12, decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(3))),
+        const SizedBox(width: 6),
+        Text(label, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Color(0xFF5E6861))),
       ],
+    );
+  }
+}
+
+class _AnnualStatTile extends StatelessWidget {
+  const _AnnualStatTile({required this.title, required this.value});
+
+  final String title;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(color: const Color(0xFFF5F7F6), borderRadius: BorderRadius.circular(12)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: Color(0xFF626D65)),
+          ),
+          const SizedBox(height: 4),
+          Expanded(
+            child: Align(
+              alignment: Alignment.bottomLeft,
+              child: Text(
+                value,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w900, color: Color(0xFF1A241D)),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -1297,23 +2248,23 @@ class BottomTabs extends StatelessWidget {
   Widget build(BuildContext context) {
     const icons = [
       Icons.home_rounded,
-      Icons.bar_chart_rounded,
-      Icons.widgets_rounded,
-      Icons.menu_book_rounded,
-      Icons.notifications_rounded,
+      Icons.access_time_rounded,
+      Icons.notifications_none_rounded,
+      Icons.savings_rounded,
+      Icons.more_horiz_rounded,
     ];
 
     return Container(
-      height: 74,
+      height: 72,
       padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(18),
         boxShadow: const [
           BoxShadow(
-            color: Color(0x1A1F2F21),
-            blurRadius: 14,
-            offset: Offset(0, 4),
+            color: Color(0x14000000),
+            blurRadius: 12,
+            offset: Offset(0, 2),
           ),
         ],
       ),
@@ -1356,12 +2307,13 @@ class BottomTabs extends StatelessWidget {
 BoxDecoration cardDecoration() {
   return BoxDecoration(
     color: Colors.white,
-    borderRadius: BorderRadius.circular(18),
+    borderRadius: BorderRadius.circular(20),
+    border: Border.all(color: const Color(0xFFE7ECE8)),
     boxShadow: const [
       BoxShadow(
-        color: Color(0x1A233728),
-        blurRadius: 12,
-        offset: Offset(0, 4),
+        color: Color(0x0E1B3020),
+        blurRadius: 10,
+        offset: Offset(0, 2),
       ),
     ],
   );
@@ -1508,8 +2460,34 @@ class AppData {
           'subMessage': 'Estas dentro de tu meta mensual',
           'percentage': 85,
         },
+        'dailyConsumption': [
+          {'hour': 0, 'value': 0.0, 'highlight': false},
+          {'hour': 1, 'value': 0.0, 'highlight': false},
+          {'hour': 2, 'value': 0.1, 'highlight': false},
+          {'hour': 3, 'value': 0.3, 'highlight': false},
+          {'hour': 4, 'value': 0.7, 'highlight': false},
+          {'hour': 5, 'value': 0.5, 'highlight': false},
+          {'hour': 6, 'value': 0.6, 'highlight': false},
+          {'hour': 7, 'value': 0.4, 'highlight': false},
+          {'hour': 8, 'value': 0.3, 'highlight': false},
+          {'hour': 9, 'value': 0.5, 'highlight': false},
+          {'hour': 10, 'value': 1.2, 'highlight': false},
+          {'hour': 11, 'value': 0.6, 'highlight': false},
+          {'hour': 12, 'value': 0.7, 'highlight': false},
+          {'hour': 13, 'value': 1.3, 'highlight': true},
+          {'hour': 14, 'value': 0.8, 'highlight': false},
+          {'hour': 15, 'value': 0.7, 'highlight': false},
+          {'hour': 16, 'value': 0.5, 'highlight': false},
+          {'hour': 17, 'value': 0.4, 'highlight': false},
+          {'hour': 18, 'value': 0.6, 'highlight': false},
+          {'hour': 19, 'value': 0.6, 'highlight': false},
+          {'hour': 20, 'value': 0.4, 'highlight': false},
+          {'hour': 21, 'value': 0.1, 'highlight': false},
+          {'hour': 22, 'value': 0.0, 'highlight': false},
+          {'hour': 23, 'value': 0.0, 'highlight': false},
+        ],
       },
-      'tabs': ['Inicio', 'Consumos', 'Servicios', 'Formacion', 'Mas'],
+      'tabs': ['Inicio', 'Historial', 'Alertas', 'Ahorro', 'Mas'],
       'modules': [
         {
           'key': 'alertas',
@@ -1555,16 +2533,16 @@ class AppData {
       'alerts': [
         {
           'service': 'energia',
-          'title': 'Tu consumo de energia aumento 20%',
-          'detail': 'Frente al mes anterior. Revisa uso de aires y cocina.',
-          'delta': '+20 kWh',
+          'title': 'Lampara encendida',
+          'detail': 'La lampara de la sala lleva encendida 3h 15m.',
+          'delta': 'Ahora',
           'severity': 'high',
         },
         {
           'service': 'agua',
-          'title': 'Incremento de 15% en agua esta semana',
-          'detail': 'Posible fuga detectada en zona de lavadora.',
-          'delta': '+1.8 m3',
+          'title': 'Uso alto de lavadora',
+          'detail': 'Llevas 2 ciclos hoy, mas de lo habitual.',
+          'delta': 'Ahora',
           'severity': 'medium',
         },
         {
@@ -1690,6 +2668,7 @@ class DashboardSummary {
     required this.consumption,
     required this.billing,
     required this.savings,
+    required this.dailyConsumption,
   });
 
   final String period;
@@ -1697,6 +2676,7 @@ class DashboardSummary {
   final List<ConsumptionItem> consumption;
   final BillingData billing;
   final SavingsData savings;
+  final List<DailyConsumptionPoint> dailyConsumption;
 
   factory DashboardSummary.fromJson(Map<String, dynamic> json) {
     return DashboardSummary(
@@ -1707,6 +2687,9 @@ class DashboardSummary {
           .toList(),
       billing: BillingData.fromJson(json['billing'] as Map<String, dynamic>),
       savings: SavingsData.fromJson(json['savings'] as Map<String, dynamic>),
+      dailyConsumption: (json['dailyConsumption'] as List<dynamic>)
+          .map((item) => DailyConsumptionPoint.fromJson(item as Map<String, dynamic>))
+          .toList(),
     );
   }
 }
@@ -1970,6 +2953,455 @@ class MonthlyConsumption {
       energia: json['energia'] as int,
       agua: json['agua'] as int,
       gas: json['gas'] as int,
+    );
+  }
+}
+
+class DailyConsumptionPoint {
+  DailyConsumptionPoint({
+    required this.hour,
+    required this.value,
+    required this.highlight,
+  });
+
+  final int hour;
+  final double value;
+  final bool highlight;
+
+  String get hourLabel => hour.toString().padLeft(2, '0');
+
+  factory DailyConsumptionPoint.fromJson(Map<String, dynamic> json) {
+    return DailyConsumptionPoint(
+      hour: json['hour'] as int,
+      value: (json['value'] as num).toDouble(),
+      highlight: json['highlight'] as bool? ?? false,
+    );
+  }
+}
+
+class _HeaderBar extends StatelessWidget {
+  const _HeaderBar({required this.notificationsCount});
+
+  final int notificationsCount;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Image.asset(
+          'assets/logo.png',
+          width: 96,
+          height: 32,
+          fit: BoxFit.contain,
+          filterQuality: FilterQuality.high,
+        ),
+        const Spacer(),
+        Stack(
+          clipBehavior: Clip.none,
+          children: [
+            const Icon(Icons.notifications_none_rounded, size: 30, color: Color(0xFF111A13)),
+            Positioned(
+              right: -2,
+              top: -2,
+              child: Container(
+                width: 22,
+                height: 22,
+                decoration: const BoxDecoration(
+                  color: Colors.red,
+                  shape: BoxShape.circle,
+                ),
+                alignment: Alignment.center,
+                child: Text(
+                  '$notificationsCount',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class DailyConsumptionSparkline extends StatelessWidget {
+  const DailyConsumptionSparkline({required this.points, super.key});
+
+  final List<DailyConsumptionPoint> points;
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomPaint(
+      painter: _SparklinePainter(points: points),
+      size: Size.infinite,
+    );
+  }
+}
+
+class _SparklinePainter extends CustomPainter {
+  _SparklinePainter({required this.points});
+
+  final List<DailyConsumptionPoint> points;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (points.length < 2) {
+      return;
+    }
+
+    final maxValue = points.map((point) => point.value).reduce((a, b) => a > b ? a : b);
+    final path = Path();
+    final linePaint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 4
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round
+      ..color = const Color(0xFFF1ED2C);
+
+    for (var i = 0; i < points.length; i++) {
+      final x = size.width * (i / (points.length - 1));
+      final normalized = points[i].value / maxValue;
+      final y = size.height - (normalized * (size.height - 8)) - 4;
+      if (i == 0) {
+        path.moveTo(x, y);
+      } else {
+        final prevX = size.width * ((i - 1) / (points.length - 1));
+        final prevY = size.height - ((points[i - 1].value / maxValue) * (size.height - 8)) - 4;
+        final control1 = Offset(prevX + (x - prevX) * 0.45, prevY);
+        final control2 = Offset(prevX + (x - prevX) * 0.55, y);
+        path.cubicTo(control1.dx, control1.dy, control2.dx, control2.dy, x, y);
+      }
+    }
+
+    final lastX = size.width;
+    final lastY = size.height - ((points.last.value / maxValue) * (size.height - 8)) - 4;
+    final dotPaint = Paint()..color = const Color(0xFFF1ED2C);
+    canvas.drawCircle(Offset(lastX, lastY), 4.2, dotPaint);
+  }
+
+  @override
+  bool shouldRepaint(covariant _SparklinePainter oldDelegate) => oldDelegate.points != points;
+}
+
+class DailySummaryChart extends StatelessWidget {
+  const DailySummaryChart({required this.points, super.key});
+
+  final List<DailyConsumptionPoint> points;
+
+  @override
+  Widget build(BuildContext context) {
+    final bars = points.take(24).toList();
+    final maxValue = bars.map((point) => point.value).fold<double>(1, (prev, point) => point > prev ? point : prev);
+    final highlighted = bars.where((e) => e.highlight).isNotEmpty ? bars.where((e) => e.highlight).first : bars[13];
+    final highlightedIndex = bars.indexOf(highlighted);
+
+    return Column(
+      children: [
+        SizedBox(
+          height: 146,
+          child: Row(
+            children: [
+              const SizedBox(
+                width: 28,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('2.0', style: TextStyle(fontSize: 11, color: Color(0xFF6E776F))),
+                    Text('1.0', style: TextStyle(fontSize: 11, color: Color(0xFF6E776F))),
+                    Text('0', style: TextStyle(fontSize: 11, color: Color(0xFF6E776F))),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 4),
+              Expanded(
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          for (final point in bars)
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 2),
+                                child: FractionallySizedBox(
+                                  alignment: Alignment.bottomCenter,
+                                  heightFactor: point.value / maxValue,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: point.highlight ? const Color(0xFF13873A) : const Color(0xFF34B233),
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: const [
+                        Text('00', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Color(0xFF4F5850))),
+                        Text('04', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Color(0xFF4F5850))),
+                        Text('08', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Color(0xFF4F5850))),
+                        Text('12', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Color(0xFF4F5850))),
+                        Text('16', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Color(0xFF4F5850))),
+                        Text('20', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Color(0xFF4F5850))),
+                        Text('24', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Color(0xFF4F5850))),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 6),
+        Align(
+          alignment: Alignment(
+            ((highlightedIndex / 23) * 2) - 1,
+            0,
+          ),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecoration(
+              color: const Color(0xFF111827),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Text(
+              '${highlighted.value.toStringAsFixed(1)} kWh',
+              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+class SavingsPage extends StatelessWidget {
+  const SavingsPage({required this.data, super.key});
+
+  final AppData data;
+
+  @override
+  Widget build(BuildContext context) {
+    final tips = data.recommendations;
+    const potential = ['5 kWh/mes', '7 kWh/mes', '4 kWh/mes', '3 kWh/mes'];
+    const icons = [
+      Icons.lightbulb_rounded,
+      Icons.local_laundry_service_rounded,
+      Icons.shower_rounded,
+      Icons.kitchen_rounded,
+    ];
+    const colors = [
+      Color(0xFFF3B21A),
+      Color(0xFF5A86C9),
+      Color(0xFF36A145),
+      Color(0xFF8D63D9),
+    ];
+
+    return ListView(
+      children: [
+        Row(
+          children: [
+            IconButton(
+              onPressed: () {},
+              visualDensity: VisualDensity.compact,
+              icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20),
+            ),
+            const Expanded(
+              child: Text(
+                'Recomendaciones de ahorro',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 28, fontWeight: FontWeight.w900, color: Color(0xFF18211B)),
+              ),
+            ),
+            const SizedBox(width: 44),
+          ],
+        ),
+        const SizedBox(height: 16),
+        const Text(
+          'Basadas en tu consumo y hábitos\nte recomendamos:',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, height: 1.35, color: Color(0xFF1F2721)),
+        ),
+        const SizedBox(height: 14),
+        ...List<Widget>.generate(tips.length, (index) {
+          final tip = tips[index];
+          final color = colors[index % colors.length];
+          final icon = icons[index % icons.length];
+          final amount = potential[index % potential.length];
+
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+              decoration: cardDecoration(),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 42,
+                    height: 42,
+                    decoration: BoxDecoration(
+                      color: color.withValues(alpha: 0.14),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(icon, size: 22, color: color),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          tip.title,
+                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w900, color: Color(0xFF18211B)),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          tip.detail,
+                          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, height: 1.25, color: Color(0xFF4D5650)),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      const Text(
+                        'Ahorro potencial',
+                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Color(0xFF6E7771)),
+                      ),
+                      const SizedBox(height: 6),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFEAF6EC),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Text(
+                          amount,
+                          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w900, color: Color(0xFF1E9B45)),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        }),
+      ],
+    );
+  }
+}
+
+class _AlertTab extends StatelessWidget {
+  const _AlertTab({required this.label, required this.selected, required this.onTap});
+
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              color: selected ? const Color(0xFF1E9B45) : const Color(0xFFE2E7E3),
+              width: selected ? 2 : 1,
+            ),
+          ),
+        ),
+        child: Text(
+          label,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w800,
+            color: selected ? const Color(0xFF1E9B45) : const Color(0xFF5E6862),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+Color _alertColor(String service) {
+  switch (service) {
+    case 'energia':
+      return const Color(0xFFF2BE1C);
+    case 'agua':
+      return const Color(0xFF5EA3E3);
+    case 'gas':
+      return const Color(0xFF52B53E);
+    default:
+      return const Color(0xFF1E9B45);
+  }
+}
+
+IconData _alertIcon(String service) {
+  switch (service) {
+    case 'energia':
+      return Icons.lightbulb_rounded;
+    case 'agua':
+      return Icons.local_laundry_service_rounded;
+    case 'gas':
+      return Icons.whatshot_rounded;
+    default:
+      return Icons.notifications_rounded;
+  }
+}
+
+class MorePage extends StatelessWidget {
+  const MorePage({required this.data, super.key});
+
+  final AppData data;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      children: [
+        const Text('Mas', style: TextStyle(fontSize: 30, fontWeight: FontWeight.w900)),
+        const SizedBox(height: 12),
+        for (final module in data.modules)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Container(
+              padding: const EdgeInsets.all(12),
+              decoration: cardDecoration(),
+              child: Row(
+                children: [
+                  Icon(iconFromName(module.icon), color: module.color),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(module.title, style: const TextStyle(fontWeight: FontWeight.w800)),
+                        const SizedBox(height: 2),
+                        Text(module.description, style: const TextStyle(fontWeight: FontWeight.w600, color: Color(0xFF566157))),
+                      ],
+                    ),
+                  ),
+                  const Icon(Icons.chevron_right_rounded),
+                ],
+              ),
+            ),
+          ),
+      ],
     );
   }
 }

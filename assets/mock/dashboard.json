@@ -43,13 +43,39 @@
       "message": "Vas por buen camino!",
       "subMessage": "Estas dentro de tu meta mensual",
       "percentage": 85
-    }
+    },
+    "dailyConsumption": [
+      { "hour": 0, "value": 0.0, "highlight": false },
+      { "hour": 1, "value": 0.0, "highlight": false },
+      { "hour": 2, "value": 0.1, "highlight": false },
+      { "hour": 3, "value": 0.3, "highlight": false },
+      { "hour": 4, "value": 0.7, "highlight": false },
+      { "hour": 5, "value": 0.5, "highlight": false },
+      { "hour": 6, "value": 0.6, "highlight": false },
+      { "hour": 7, "value": 0.4, "highlight": false },
+      { "hour": 8, "value": 0.3, "highlight": false },
+      { "hour": 9, "value": 0.5, "highlight": false },
+      { "hour": 10, "value": 1.2, "highlight": false },
+      { "hour": 11, "value": 0.6, "highlight": false },
+      { "hour": 12, "value": 0.7, "highlight": false },
+      { "hour": 13, "value": 1.3, "highlight": true },
+      { "hour": 14, "value": 0.8, "highlight": false },
+      { "hour": 15, "value": 0.7, "highlight": false },
+      { "hour": 16, "value": 0.5, "highlight": false },
+      { "hour": 17, "value": 0.4, "highlight": false },
+      { "hour": 18, "value": 0.6, "highlight": false },
+      { "hour": 19, "value": 0.6, "highlight": false },
+      { "hour": 20, "value": 0.4, "highlight": false },
+      { "hour": 21, "value": 0.1, "highlight": false },
+      { "hour": 22, "value": 0.0, "highlight": false },
+      { "hour": 23, "value": 0.0, "highlight": false }
+    ]
   },
   "tabs": [
     "Inicio",
-    "Consumos",
-    "Servicios",
-    "Formacion",
+    "Historial",
+    "Alertas",
+    "Ahorro",
     "Mas"
   ],
   "modules": [
@@ -97,16 +123,16 @@
   "alerts": [
     {
       "service": "energia",
-      "title": "Tu consumo de energia aumento 20%",
-      "detail": "Frente al mes anterior. Revisa uso de aires y cocina.",
-      "delta": "+20 kWh",
+      "title": "Lampara encendida",
+      "detail": "La lampara de la sala lleva encendida 3h 15m.",
+      "delta": "Ahora",
       "severity": "high"
     },
     {
       "service": "agua",
-      "title": "Incremento de 15% en agua esta semana",
-      "detail": "Posible fuga detectada en zona de lavadora.",
-      "delta": "+1.8 m3",
+      "title": "Uso alto de lavadora",
+      "detail": "Llevas 2 ciclos hoy, mas de lo habitual.",
+      "delta": "Ahora",
       "severity": "medium"
     },
     {
@@ -177,6 +203,32 @@
       }
     ]
   },
+  "dailyConsumption": [
+    { "hour": 0, "value": 0.0, "highlight": false },
+    { "hour": 1, "value": 0.0, "highlight": false },
+    { "hour": 2, "value": 0.1, "highlight": false },
+    { "hour": 3, "value": 0.3, "highlight": false },
+    { "hour": 4, "value": 0.7, "highlight": false },
+    { "hour": 5, "value": 0.5, "highlight": false },
+    { "hour": 6, "value": 0.6, "highlight": false },
+    { "hour": 7, "value": 0.4, "highlight": false },
+    { "hour": 8, "value": 0.3, "highlight": false },
+    { "hour": 9, "value": 0.5, "highlight": false },
+    { "hour": 10, "value": 1.2, "highlight": false },
+    { "hour": 11, "value": 0.6, "highlight": false },
+    { "hour": 12, "value": 0.7, "highlight": false },
+    { "hour": 13, "value": 1.3, "highlight": true },
+    { "hour": 14, "value": 0.8, "highlight": false },
+    { "hour": 15, "value": 0.7, "highlight": false },
+    { "hour": 16, "value": 0.5, "highlight": false },
+    { "hour": 17, "value": 0.4, "highlight": false },
+    { "hour": 18, "value": 0.6, "highlight": false },
+    { "hour": 19, "value": 0.6, "highlight": false },
+    { "hour": 20, "value": 0.4, "highlight": false },
+    { "hour": 21, "value": 0.1, "highlight": false },
+    { "hour": 22, "value": 0.0, "highlight": false },
+    { "hour": 23, "value": 0.0, "highlight": false }
+  ],
   "historyByYear": {
     "2025": [
       { "month": "Ene", "energia": 144, "agua": 9, "gas": 7 },
