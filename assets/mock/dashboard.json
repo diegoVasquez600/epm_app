@@ -1,0 +1,210 @@
+{
+  "user": {
+    "name": "Ana",
+    "greeting": "Bienvenida a tu espacio EPM"
+  },
+  "dashboard": {
+    "period": "Mayo 2026",
+    "consumptionStatus": "Dentro de meta",
+    "consumption": [
+      {
+        "icon": "electricity",
+        "label": "Energia",
+        "value": 180,
+        "unit": "kWh",
+        "trend": 12,
+        "direction": "up"
+      },
+      {
+        "icon": "water_drop",
+        "label": "Agua",
+        "value": 12,
+        "unit": "m3",
+        "trend": 8,
+        "direction": "up"
+      },
+      {
+        "icon": "fire",
+        "label": "Gas",
+        "value": 9,
+        "unit": "m3",
+        "trend": 5,
+        "direction": "down"
+      }
+    ],
+    "billing": {
+      "title": "Valor aproximado de tu factura",
+      "amount": "$145.000",
+      "dueDate": "Fecha de pago: 28 May 2026",
+      "cta": "Pagar ahora"
+    },
+    "savings": {
+      "title": "Tu estado de ahorro",
+      "message": "Vas por buen camino!",
+      "subMessage": "Estas dentro de tu meta mensual",
+      "percentage": 85
+    }
+  },
+  "tabs": [
+    "Inicio",
+    "Consumos",
+    "Servicios",
+    "Formacion",
+    "Mas"
+  ],
+  "modules": [
+    {
+      "key": "alertas",
+      "title": "Alertas de consumo",
+      "icon": "alert",
+      "description": "Recibe alertas inteligentes sobre cambios en tu consumo.",
+      "preview": "Tu consumo de energia aumento 20% frente al mes anterior.",
+      "color": 4293084746
+    },
+    {
+      "key": "historial",
+      "title": "Historial de consumo",
+      "icon": "history",
+      "description": "Consulta tu historial y visualiza tendencias por servicio.",
+      "preview": "Visualiza 2025 y 2026 con filtros por energia, agua y gas.",
+      "color": 4283524520
+    },
+    {
+      "key": "recomendaciones",
+      "title": "Recomendaciones de ahorro",
+      "icon": "tips",
+      "description": "Consejos personalizados para ahorrar en casa cada dia.",
+      "preview": "Desconecta aparatos inactivos para reducir hasta 8% consumo.",
+      "color": 4286736269
+    },
+    {
+      "key": "comparacion",
+      "title": "Comparacion mensual",
+      "icon": "compare",
+      "description": "Compara tu consumo actual con el mes anterior.",
+      "preview": "Energia +17%, Agua +20%, Gas +17% frente al mes previo.",
+      "color": 4285749584
+    },
+    {
+      "key": "notificaciones",
+      "title": "Notificaciones de alto consumo",
+      "icon": "notifications",
+      "description": "Actua rapido cuando se detecta una subida fuerte.",
+      "preview": "Has alcanzado 85% de tu meta mensual de energia.",
+      "color": 4294945317
+    }
+  ],
+  "alerts": [
+    {
+      "service": "energia",
+      "title": "Tu consumo de energia aumento 20%",
+      "detail": "Frente al mes anterior. Revisa uso de aires y cocina.",
+      "delta": "+20 kWh",
+      "severity": "high"
+    },
+    {
+      "service": "agua",
+      "title": "Incremento de 15% en agua esta semana",
+      "detail": "Posible fuga detectada en zona de lavadora.",
+      "delta": "+1.8 m3",
+      "severity": "medium"
+    },
+    {
+      "service": "gas",
+      "title": "Perfil de fuga detectada en uso nocturno",
+      "detail": "Actividad inusual entre 2AM y 4AM.",
+      "delta": "+0.6 m3",
+      "severity": "high"
+    }
+  ],
+  "recommendations": [
+    {
+      "title": "Usa bombillas LED",
+      "detail": "Reduce uso de energia hasta 20% en iluminacion."
+    },
+    {
+      "title": "Toma duchas de maximo 5 minutos",
+      "detail": "Ahorra agua sin perder confort diario."
+    },
+    {
+      "title": "Desconecta aparatos inactivos",
+      "detail": "Evita consumo fantasma durante la noche."
+    },
+    {
+      "title": "Aprovecha luz natural",
+      "detail": "Disminuye uso de focos durante el dia."
+    }
+  ],
+  "notifications": [
+    {
+      "title": "Has alcanzado 85% de tu meta mensual de energia",
+      "detail": "Te queda margen de ahorro para cerrar bien el mes.",
+      "status": "unread"
+    },
+    {
+      "title": "Tu consumo de agua esta por encima del promedio",
+      "detail": "Aproximadamente +18% frente al promedio.",
+      "status": "unread"
+    },
+    {
+      "title": "Recordatorio: menor consumo de gas en frio",
+      "detail": "Revisa termostato y ventilacion para optimizar.",
+      "status": "read"
+    }
+  ],
+  "comparison": {
+    "currentPeriod": "Mayo 2026",
+    "previousPeriod": "Abr 2026",
+    "summary": "Tu consumo total aumento 17% respecto al mes anterior.",
+    "rows": [
+      {
+        "service": "energia",
+        "current": "180 kWh",
+        "previous": "154 kWh",
+        "changePercent": 17
+      },
+      {
+        "service": "agua",
+        "current": "12 m3",
+        "previous": "10 m3",
+        "changePercent": 20
+      },
+      {
+        "service": "gas",
+        "current": "9 m3",
+        "previous": "7.7 m3",
+        "changePercent": 17
+      }
+    ]
+  },
+  "historyByYear": {
+    "2025": [
+      { "month": "Ene", "energia": 144, "agua": 9, "gas": 7 },
+      { "month": "Feb", "energia": 147, "agua": 9, "gas": 7 },
+      { "month": "Mar", "energia": 151, "agua": 10, "gas": 7 },
+      { "month": "Abr", "energia": 149, "agua": 10, "gas": 8 },
+      { "month": "May", "energia": 154, "agua": 10, "gas": 8 },
+      { "month": "Jun", "energia": 157, "agua": 10, "gas": 8 },
+      { "month": "Jul", "energia": 160, "agua": 11, "gas": 8 },
+      { "month": "Ago", "energia": 163, "agua": 11, "gas": 8 },
+      { "month": "Sep", "energia": 161, "agua": 11, "gas": 8 },
+      { "month": "Oct", "energia": 166, "agua": 11, "gas": 9 },
+      { "month": "Nov", "energia": 169, "agua": 11, "gas": 9 },
+      { "month": "Dic", "energia": 172, "agua": 12, "gas": 9 }
+    ],
+    "2026": [
+      { "month": "Ene", "energia": 168, "agua": 10, "gas": 8 },
+      { "month": "Feb", "energia": 170, "agua": 10, "gas": 8 },
+      { "month": "Mar", "energia": 174, "agua": 11, "gas": 8 },
+      { "month": "Abr", "energia": 154, "agua": 10, "gas": 7 },
+      { "month": "May", "energia": 180, "agua": 12, "gas": 9 },
+      { "month": "Jun", "energia": 183, "agua": 12, "gas": 9 },
+      { "month": "Jul", "energia": 186, "agua": 12, "gas": 9 },
+      { "month": "Ago", "energia": 182, "agua": 12, "gas": 9 },
+      { "month": "Sep", "energia": 179, "agua": 11, "gas": 8 },
+      { "month": "Oct", "energia": 181, "agua": 11, "gas": 8 },
+      { "month": "Nov", "energia": 184, "agua": 12, "gas": 8 },
+      { "month": "Dic", "energia": 187, "agua": 12, "gas": 9 }
+    ]
+  }
+}
