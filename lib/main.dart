@@ -643,14 +643,14 @@ class ServicesHubPage extends StatelessWidget {
             height: 180,
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
-              itemBuilder: (_, index) => SizedBox(
+              itemBuilder: (context, index) => SizedBox(
                 width: 180,
                 child: ModuleTile(
                   module: data.modules[index],
                   onTap: () => _openModule(context, data.modules[index].key),
                 ),
               ),
-              separatorBuilder: (_, __) => const SizedBox(width: 8),
+              separatorBuilder: (context, index) => const SizedBox(width: 8),
               itemCount: data.modules.length,
             ),
           ),
@@ -675,8 +675,8 @@ class ServicesHubPage extends StatelessWidget {
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   itemCount: data.modules.length,
-                  separatorBuilder: (_, __) => const SizedBox(width: 10),
-                  itemBuilder: (_, index) {
+                  separatorBuilder: (context, index) => const SizedBox(width: 10),
+                  itemBuilder: (context, index) {
                     final module = data.modules[index];
                     return SizedBox(
                       width: 260,
