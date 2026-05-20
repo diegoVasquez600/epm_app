@@ -244,7 +244,16 @@ class HomeDashboardPage extends StatelessWidget {
 
     return ListView(
       children: [
-        _HeaderBar(notificationsCount: 3),
+        _HeaderBar(
+          notificationsCount: data.notifications.length,
+          onNotificationsTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => NotificationsPage(data: data),
+              ),
+            );
+          },
+        ),
         const SizedBox(height: 18),
         Text(
           '¡Hola, ${data.user.name}! 👋',
@@ -624,8 +633,18 @@ class HistoryPage extends StatefulWidget {
 }
 
 class _HistoryPageState extends State<HistoryPage> {
-  String _period = 'diario';
-  int _year = 2024;
+  late String _period;
+  late int _year;
+
+  int get _minYear => widget.data.historyByYear.keys.reduce((a, b) => a < b ? a : b);
+  int get _maxYear => widget.data.historyByYear.keys.reduce((a, b) => a > b ? a : b);
+
+  @override
+  void initState() {
+    super.initState();
+    _period = 'anual';
+    _year = _maxYear;
+  }
 
   final List<double> _dailyValues = <double>[
     0.22,
@@ -673,7 +692,7 @@ class _HistoryPageState extends State<HistoryPage> {
   void _goPrevious() {
     setState(() {
       if (_period == 'anual') {
-        _year -= 1;
+        _year = _year > _minYear ? _year - 1 : _year;
       }
     });
   }
@@ -681,7 +700,7 @@ class _HistoryPageState extends State<HistoryPage> {
   void _goNext() {
     setState(() {
       if (_period == 'anual') {
-        _year += 1;
+        _year = _year < _maxYear ? _year + 1 : _year;
       }
     });
   }
@@ -2980,9 +2999,13 @@ class DailyConsumptionPoint {
 }
 
 class _HeaderBar extends StatelessWidget {
-  const _HeaderBar({required this.notificationsCount});
+  const _HeaderBar({
+    required this.notificationsCount,
+    required this.onNotificationsTap,
+  });
 
   final int notificationsCount;
+  final VoidCallback onNotificationsTap;
 
   @override
   Widget build(BuildContext context) {
@@ -2996,32 +3019,39 @@ class _HeaderBar extends StatelessWidget {
           filterQuality: FilterQuality.high,
         ),
         const Spacer(),
-        Stack(
-          clipBehavior: Clip.none,
-          children: [
-            const Icon(Icons.notifications_none_rounded, size: 30, color: Color(0xFF111A13)),
-            Positioned(
-              right: -2,
-              top: -2,
-              child: Container(
-                width: 22,
-                height: 22,
-                decoration: const BoxDecoration(
-                  color: Colors.red,
-                  shape: BoxShape.circle,
-                ),
-                alignment: Alignment.center,
-                child: Text(
-                  '$notificationsCount',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 11,
-                    fontWeight: FontWeight.w900,
+        InkWell(
+          onTap: onNotificationsTap,
+          borderRadius: BorderRadius.circular(20),
+          child: Padding(
+            padding: const EdgeInsets.all(4),
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                const Icon(Icons.notifications_none_rounded, size: 30, color: Color(0xFF111A13)),
+                Positioned(
+                  right: -2,
+                  top: -2,
+                  child: Container(
+                    width: 22,
+                    height: 22,
+                    decoration: const BoxDecoration(
+                      color: Colors.red,
+                      shape: BoxShape.circle,
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      '$notificationsCount',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
                   ),
                 ),
-              ),
+              ],
             ),
-          ],
+          ),
         ),
       ],
     );
@@ -3076,6 +3106,8 @@ class _SparklinePainter extends CustomPainter {
         path.cubicTo(control1.dx, control1.dy, control2.dx, control2.dy, x, y);
       }
     }
+
+    canvas.drawPath(path, linePaint);
 
     final lastX = size.width;
     final lastY = size.height - ((points.last.value / maxValue) * (size.height - 8)) - 4;

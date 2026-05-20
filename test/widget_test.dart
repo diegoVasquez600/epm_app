@@ -55,10 +55,7 @@ void main() {
     expect(find.text('Mensual'), findsOneWidget);
     expect(find.text('Anual'), findsOneWidget);
 
-    await tapVisibleText(tester, 'Anual');
-    await tester.pump(const Duration(milliseconds: 300));
-
-    expect(find.text('2024'), findsOneWidget);
+    expect(find.text('2026'), findsOneWidget);
   });
 
   testWidgets('Alertas muestra el modulo', (tester) async {
